@@ -4,24 +4,47 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
+    <title>My Library</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-    <header>
+    <header class="book-header">
         <h1 class="title">
-            Title
+            My Library
         </h1>
+        <div>
+            <button class="add-book-button">Add book</button>
+        </div>
     </header>
     <main>
-        <div class="user-grid"></div>
-        <div class="computer-grid"></div>
+        <div class="book-list"></div>
+        <dialog class="add-book-modal">
+            <h2 class="add-book-modal-title">
+                Add a book
+            </h2>
+            <form class="add-book-form">
+                <label for="book-title">Title</label>
+                <input type="text" name="book-title" id="book-title" />
+                <br />
+                <label for="book-author">Author</label>
+                <input type="text" name="book-author" id="book-author" />
+                <br />
+                <label for="book-pages">Number of pages</label>
+                <input type="number" name="book-pages" id="book-pages" min="0" />
+                <br />
+                <label for="book-read">Read?</label>
+                <input type="checkbox" name="book-read" id="book-read" />
+                <br />
+                <button type="submit" class="book-form-buttons submit-book-form">Add book</button>
+                <button type="button" class="book-form-buttons close-book-form">Cancel</button>
+            </form>
+        </dialog>
     </main>
     <footer>
         <a href="https://github.com/al-moreton">&copy; Al Moreton</a>
         <pre>|</pre>
-        <a href="https://github.com/al-moreton/calculator">Source Code</a>
+        <a href="https://github.com/al-moreton/library">Source Code</a>
     </footer>
     <script src="script.js"></script>
 </body>

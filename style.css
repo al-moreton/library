@@ -1,5 +1,6 @@
 body {
     background-color: #ededed;
+    padding: 0 50px 50px 50px;
 }
 
 .main {
@@ -7,9 +8,64 @@ body {
     padding-top: 10px;
 }
 
+.book-header {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    align-items: end;
+    margin-bottom: 30px;
+}
+
 .title {
-    text-align: center;
     font-size: 50px;
+    margin-bottom: 0px;
+    margin-top: 20px;
+}
+
+.add-book-button {
+    margin-bottom: 10px;
+}
+
+.book-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.book-card {
+    /* border: 1px solid black; */
+    /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+    border-radius: 2px;
+    padding: 15px;
+    background-color: white;
+}
+
+.book-title {
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.book-author {
+    margin-top: 0px;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.add-book-modal {
+    border: none;
+    width: 300px;
+}
+
+.add-book-modal-title {
+    margin-top: 0px;
+}
+
+input {
+    margin-bottom: 10px;
+}
+
+.book-form-buttons {
+    margin-top: 10px;
 }
 
 footer {
