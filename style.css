@@ -77,3 +77,13 @@ footer {
     gap: 10px;
     margin-top: 70px;
 }
+
+@media (max-width: 600px) {
+    .title {
+        font-size: 30px;
+    }
+
+    .add-book-button {
+        margin-bottom: 5px;
+    }
+}
