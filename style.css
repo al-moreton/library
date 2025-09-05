@@ -1,0 +1,23 @@
+body {
+    background-color: #ededed;
+}
+
+.main {
+    display: flex;
+    padding-top: 10px;
+}
+
+.title {
+    text-align: center;
+    font-size: 50px;
+}
+
+footer {
+    text-align: center;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 70px;
+}
