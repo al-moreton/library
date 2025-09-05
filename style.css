@@ -9,11 +9,11 @@ body {
 }
 
 .book-header {
-    display: flex;
-    flex-direction: row;
-    gap: 40px;
-    align-items: end;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
+}
+
+.book-buttons {
+    text-align: right;
 }
 
 .title {
@@ -26,10 +26,41 @@ body {
     margin-bottom: 10px;
 }
 
-.book-list {
+.book-list-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 15px;
+}
+
+.book-list-table {
+    background-color: white;
+    padding: 20px;
+}
+
+.table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.table thead {
+    margin-bottom: 20px;
+}
+
+.table .table-body tr td {
+    text-overflow: ellipsis;
+}
+
+th, td {
+    padding: 5px;
+}
+
+.table tr {
+    border-top: 1px solid rgb(138, 136, 136, 0.5);
+}
+
+.table thead tr {
+    border: none;
 }
 
 .book-card {

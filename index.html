@@ -4,21 +4,24 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Library</title>
+    <title>Library</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
     <header class="book-header">
-        <h1 class="title">
-            My Library
-        </h1>
         <div>
-            <button class="add-book-button">Add book</button>
+            <h1 class="title">
+                Library
+            </h1>
+        </div>
+        <div class="book-buttons">
+            <button class="header-buttons add-book-button">Add book</button>
+            <button class="header-buttons change-layout">Change layout</button>
         </div>
     </header>
     <main>
-        <div class="book-list"></div>
+        <div class="book-list book-list-grid"></div>
         <dialog class="add-book-modal">
             <h2 class="add-book-modal-title">
                 Add a book
