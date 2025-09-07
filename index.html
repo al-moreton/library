@@ -17,11 +17,11 @@
             </h1>
         </div>
         <div class="book-buttons">
-            <button class="header-buttons add-book-button">
-                <i class="fa-solid fa-plus fa-xl" style="color: #4b8674;"></i>
+            <button type="button" class="header-buttons add-book-button">
+                <i class="fa-solid fa-plus fa-xl"></i>
             </button>
-            <button class="header-buttons change-layout">
-                <i class="fa-solid fa-table fa-xl" style="color: #4b8674;"></i>
+            <button type="button" class="header-buttons change-layout">
+                <i class="fa-solid fa-table fa-xl"></i>
             </button>
         </div>
     </header>
@@ -39,7 +39,7 @@
                 <input type="text" name="book-author" id="book-author" />
                 <br />
                 <label for="book-rating">Rating</label>
-                <input type="number" name="book-rating" id="book-rating" min="0" />
+                <input type="number" name="book-rating" id="book-rating" min="0" max="5" />
                 <br />
                 <label for="book-read">Read?</label>
                 <input type="checkbox" name="book-read" id="book-read" />
@@ -63,7 +63,7 @@
                 <input type="text" name="book-author-edit" id="book-author-edit" />
                 <br />
                 <label for="book-rating-edit">Rating</label>
-                <input type="number" name="book-rating-edit" id="book-rating-edit" min="0" />
+                <input type="number" name="book-rating-edit" id="book-rating-edit" min="0" max="5" />
                 <br />
                 <label for="book-read-edit">Read?</label>
                 <input type="checkbox" name="book-read-edit" id="book-read-edit" />

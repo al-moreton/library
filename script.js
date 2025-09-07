@@ -55,23 +55,37 @@ editBookForm.addEventListener('submit', (e) => {
     editBook();
 }, true)
 
+bookList.addEventListener('click', (e) => {
+    if (e.target.classList.contains('delete-book')) {
+        deleteBook(e.target.dataset.id);
+    }
+    if (e.target.classList.contains('edit-book')) {
+        showEditBookModal(e.target.dataset.id);
+    }
+    if (e.target.classList.contains('toggle-read')) {
+        const book = myLibrary.find(b => b.id == e.target.dataset.id);
+        if (book) book.toggleRead();
+    }
+});
+
 // Object
 
 function Book(title, author, read = false, rating = 0, image = '') {
-    this.id = this.id = crypto.randomUUID();;
+    this.id = crypto.randomUUID();;
     this.title = title;
     this.author = author;
-    this.rating = rating;
+    this.rating = Math.min(5, Math.max(0, Number(rating)));;
     this.read = read;
     this.image = image;
 }
 
 Book.prototype.isRead = function () {
-    return (this.read) ? `<i data-id="${this.id}" class="toggle-read fa-solid fa-check fa-xl"></i>` : `<i data-id="${this.id}" class="toggle-read fa-solid fa-xmark fa-xl"></i>`;
+    return (this.read) ? `<i data-id="${this.id}" class="toggle-read fa-solid fa-check fa-xl" style="color: green;"></i>` : `<i data-id="${this.id}" class="toggle-read fa-solid fa-xmark fa-xl" style="color: red;"></i>`;
 }
 
 Book.prototype.toggleRead = function () {
     this.read = !this.read;
+    saveLibrary();
     refreshBookList();
 }
 
@@ -94,13 +108,13 @@ function displayAllBooks() {
         const content = `
             <thead>
                 <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Author</th>
-                    <th scope="col">Rating</th>
-                    <th scope="col">Read?</th>
-                    <th scope="col">&nbsp;</th>
-                    <th scope="col">&nbsp;</th>
-                    <th scope="col">&nbsp;</th>
+                    <th scope="col">&nbsp</th>
+                    <th scope="col" class="title-col">Title</th>
+                    <th scope="col" class="author-col">Author</th>
+                    <th scope="col" class="rating-col">Rating</th>
+                    <th scope="col" class="read-col">Read?</th>
+                    <th scope="col" class="delete-col">&nbsp;</th>
+                    <th scope="col class="edit-col"">&nbsp;</th>
                 </tr>
             </thead>
             <tbody class="table-body"></tbody>
@@ -113,26 +127,7 @@ function displayAllBooks() {
         displayBook(book);
     })
 
-    for (let i = 0; i < deleteBookButtons.length; i++) {
-        deleteBookButtons[i].addEventListener('click', (e) => {
-            deleteBook(e.target.dataset.id);
-        })
-    }
-
-    for (let i = 0; i < editBookButtons.length; i++) {
-        editBookButtons[i].addEventListener('click', (e) => {
-            showEditBookModal(e.target.dataset.id);
-        })
-    }
-
-    for (let i = 0; i < toggleReadButons.length; i++) {
-        toggleReadButons[i].addEventListener('click', (e) => {
-            const book = myLibrary.find(b => b.id == e.target.dataset.id);
-            if (book) {
-                book.toggleRead();
-            }
-        })
-    }
+    getTableRows();
 }
 
 function toggleLayout() {
@@ -153,11 +148,11 @@ function gridLayout(book) {
     bookCard.dataset.id = book.id;
     const content = `
                 <header class="article-header">
-                    <div class="article-header-item">
+                    <div class="article-header-item article-header-title">
                         <h2 class="book-title">${book.title}</h2>
                         <h3 class="book-author">${book.author}</h3>
                     </div>
-                    <div class"article-header-item">
+                    <div class="article-header-item article-header-read">
                         ${book.isRead()}
                     </div>
                 </header>
@@ -178,15 +173,23 @@ function tableLayout(book) {
     const tableRow = document.createElement('tr');
     const table = document.querySelector('.table-body');
     const content = `
-        <th class="row-header"scope="row">${book.title}</th>
-        <td>${book.author}</td>
-        <td>${book.getRating()}</td>
-        <td>${book.isRead()}</td>
-        <td><button type="button" class="delete-book" data-id="${book.id}"></button></td>
-        <td><button type="button" class="edit-book" data-id="${book.id}"></button></td>
+        <th class="row-header" scope="row"></th>
+        <td class="title-col">${book.title}</td>
+        <td class="author-col">${book.author}</td>
+        <td class="rating-col">${book.getRating()}</td>
+        <td class="read-col">${book.isRead()}</td>
+        <td class="delete-col"><button type="button" class="delete-book" data-id="${book.id}"></button></td>
+        <td class="edit-col"><button type="button" class="edit-book" data-id="${book.id}"></button></td>
     `;
     tableRow.innerHTML = content;
     table.appendChild(tableRow);
+}
+
+function getTableRows() {
+    const tableRows = document.querySelectorAll('.row-header');
+    for (let i = 0; i < tableRows.length; i++) {
+        tableRows[i].textContent = i + 1;
+    }
 }
 
 function displayBook(book) {
@@ -230,6 +233,7 @@ function editBook(e) {
         book.image = editImage.value;
     }
     closeEditModal();
+    saveLibrary();
     refreshBookList();
 }
 
@@ -253,9 +257,10 @@ function closeModal() {
 }
 
 function addBook(e) {
-    const newBook = new Book(title.value, author.value, read.checked, rating.value);
+    const newBook = new Book(title.value, author.value, read.checked, rating.value, image.value);
     myLibrary.push(newBook);
     closeModal();
+    saveLibrary();
     refreshBookList();
 }
 
@@ -269,25 +274,31 @@ function deleteBook(book) {
     if (index >= 0) {
         myLibrary.splice(index, 1);
     }
+    saveLibrary();
     refreshBookList();
 }
 
-addBookToLibrary('Wasp Factory', 'Iain M Banks', true, 4, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1434940562i/567678.jpg');
-addBookToLibrary('Dune', 'Frank Herbert', true, 3, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1555447414i/44767458.jpg');
-addBookToLibrary('The Magus', 'John Fowles', false, 0, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1441323311i/16286.jpg');
-addBookToLibrary('Prophet Song', 'Rachel Morris', false, 2, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1689541792i/158875813.jpg');
-addBookToLibrary('Homo Deus', 'Rachel Morris');
+// local storage
+function saveLibrary() {
+    localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
+}
 
+function loadLibrary() {
+    const data = JSON.parse(localStorage.getItem('myLibrary')) || [];
+    myLibrary.length = 0; // clear current
+    data.forEach(b => myLibrary.push(new Book(b.title, b.author, b.read, b.rating, b.image)));
+}
+
+// addBookToLibrary('Wasp Factory', 'Iain M Banks', true, 4, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1434940562i/567678.jpg');
+// addBookToLibrary('Dune', 'Frank Herbert', true, 3, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1555447414i/44767458.jpg');
+// addBookToLibrary('The Magus', 'John Fowles', false, 0, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1441323311i/16286.jpg');
+// addBookToLibrary('Prophet Song', 'Rachel Morris', false, 2, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1689541792i/158875813.jpg');
+// addBookToLibrary('Homo Deus', 'Rachel Morris');
+
+loadLibrary();
 displayAllBooks();
 
 // Display total number of books, and total read
-// Change delete icon to bin
-// DONE Button to change display to table instead of grid
 // Add favourite icon
 // Ability to sort books
-// Add read icon to top right, if clicked changes status
-// DONE Add edit button
-// Add image URL
-// Add local storage
-// DONE Add rating
-// Add numbers to table view
+// Hook up to API to download images and other metadata

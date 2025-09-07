@@ -8,12 +8,35 @@ body {
     padding-top: 10px;
 }
 
+button:hover {
+    color: yellow;
+}
+
+button i:hover {
+    color: yellow;
+}
+
 .book-header {
     margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.add-book-button {
+    color: #4b8674;
+}
+
+.change-layout {
+    color: #4b8674;
 }
 
 .book-content {
     margin-bottom: 10px;
+}
+
+.book-buttons {
+    align-self: end;
 }
 
 .orange-star {
@@ -57,6 +80,36 @@ body {
     width: 100%;
     text-align: left;
     border-collapse: collapse;
+    overflow-x: auto;
+    white-space: nowrap;
+    display: block;
+}
+
+.title-col {
+    max-width: 250px;
+}
+
+.author-col {
+    max-width: 150px;
+}
+
+.rating-col {
+    max-width: 150px;
+}
+
+.read-col {
+    max-width: 70px;
+}
+
+.delete-col, .edit-col {
+    max-width: 50px;
+}
+
+.table-body tr th,
+.table-body tr td {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .table thead {
@@ -67,7 +120,8 @@ body {
     text-overflow: ellipsis;
 }
 
-th, td {
+th,
+td {
     padding: 5px;
 }
 
@@ -92,9 +146,23 @@ th, td {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: 15px;
 }
 
-.book-card button, .table-body tr td button {
+.article-header-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.article-header-title .book-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.book-card button,
+.table-body tr td button {
     border: none;
     background: none;
 }
@@ -120,7 +188,8 @@ th, td {
     font-style: italic;
 }
 
-.add-book-modal, .edit-book-modal {
+.add-book-modal,
+.edit-book-modal {
     border: none;
     width: 300px;
 }
