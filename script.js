@@ -113,28 +113,11 @@ Book.prototype.getRating = function () {
 }
 
 function filterBooks(str) {
-    const filteredLibrary = myLibrary.filter((b) => {
-        return (
-            b.title.toLowerCase().includes(str.toLowerCase()) ||
-            b.author.toLowerCase().includes(str.toLowerCase())
-        );
-    })
-    displayFilteredBooks(filteredLibrary);
-}
-
-// This is repeating what displayAllBooks is doing, could probably combine
-function displayFilteredBooks(filteredList) {
-    while (bookList.firstChild) {
-        bookList.removeChild(bookList.lastChild);
-    }
-    if (filteredList.length === 0) {
-        bookList.innerHTML = "<p>No books found!</p>";
-        return;
-    }
-    filteredList.forEach((book) => {
-        displayBook(book);
-    });
-    if (displayMode === 'table') getTableRows();
+    const filtered = myLibrary.filter(b =>
+        b.title.toLowerCase().includes(str.toLowerCase()) ||
+        b.author.toLowerCase().includes(str.toLowerCase())
+    );
+    refreshBookList(filtered);
 }
 
 function sortBooks(method) {
@@ -186,41 +169,13 @@ function sortBooks(method) {
     refreshBookList();
 }
 
-function displayAllBooks() {
-    if (displayMode === 'table') {
-        const table = document.createElement('table');
-        table.classList.add('table');
-        const content = `
-            <thead>
-                <tr>
-                    <th scope="col">&nbsp</th>
-                    <th scope="col" class="title-col">Title</th>
-                    <th scope="col" class="author-col">Author</th>
-                    <th scope="col" class="rating-col">Rating</th>
-                    <th scope="col" class="read-col">Read?</th>
-                    <th scope="col" class="delete-col">&nbsp;</th>
-                    <th scope="col class="edit-col"">&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody class="table-body"></tbody>
-        `;
-        table.innerHTML = content;
-        bookList.appendChild(table);
-    }
-
-    myLibrary.forEach((book) => {
-        displayBook(book);
-    })
-
-    if (displayMode === 'table') getTableRows();
-}
-
 function toggleLayout() {
     if (displayMode === 'grid') {
         displayMode = 'table';
     } else if (displayMode == 'table') {
         displayMode = 'grid';
     }
+    // pass over filtered list here to keep filter when changing layout
     refreshBookList();
 }
 
@@ -285,11 +240,39 @@ function displayBook(book) {
     }
 }
 
-function refreshBookList() {
+function refreshBookList(list = myLibrary) {
     while (bookList.firstChild) {
         bookList.removeChild(bookList.lastChild);
     }
-    displayAllBooks()
+
+    if (list.length === 0) {
+        bookList.innerHTML = "<p>No books found!</p>";
+        return;
+    }
+
+    if (displayMode === 'table') {
+        const table = document.createElement('table');
+        table.classList.add('table');
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th scope="col">&nbsp</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Rating</th>
+                    <th scope="col">Read?</th>
+                    <th scope="col">&nbsp;</th>
+                    <th scope="col">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody class="table-body"></tbody>
+        `;
+        bookList.appendChild(table);
+    }
+
+    list.forEach(displayBook);
+
+    if (displayMode === 'table') getTableRows();
 }
 
 // Edit books
@@ -431,8 +414,9 @@ function loadLibrary() {
 }
 
 loadLibrary();
-displayAllBooks();
+refreshBookList();
 
 // Display total number of books, and total read
 // Hook up to API to download images and other metadata
-// add favourite?
+// add favourites?
+// filter to follow through when changing layout
