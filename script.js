@@ -289,11 +289,11 @@ function loadLibrary() {
     data.forEach(b => myLibrary.push(new Book(b.title, b.author, b.read, b.rating, b.image)));
 }
 
-// addBookToLibrary('Wasp Factory', 'Iain M Banks', true, 4, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1434940562i/567678.jpg');
-// addBookToLibrary('Dune', 'Frank Herbert', true, 3, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1555447414i/44767458.jpg');
-// addBookToLibrary('The Magus', 'John Fowles', false, 0, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1441323311i/16286.jpg');
-// addBookToLibrary('Prophet Song', 'Rachel Morris', false, 2, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1689541792i/158875813.jpg');
-// addBookToLibrary('Homo Deus', 'Rachel Morris');
+addBookToLibrary('Wasp Factory', 'Iain M Banks', true, 4, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1434940562i/567678.jpg');
+addBookToLibrary('Dune', 'Frank Herbert', true, 3, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1555447414i/44767458.jpg');
+addBookToLibrary('The Magus', 'John Fowles', false, 0, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1441323311i/16286.jpg');
+addBookToLibrary('Prophet Song', 'Rachel Morris', false, 2, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1689541792i/158875813.jpg');
+addBookToLibrary('Homo Deus', 'Rachel Morris');
 
 loadLibrary();
 displayAllBooks();
