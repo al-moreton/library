@@ -7,15 +7,34 @@ const changeLayoutButton = document.querySelector('.change-layout');
 const deleteBookButtons = document.getElementsByClassName('delete-book');
 const toggleReadButons = document.getElementsByClassName('toggle-read');
 
+const editBookButtons = document.getElementsByClassName('edit-book');
+const editBookModal = document.querySelector('.edit-book-modal');
+const editBookForm = document.querySelector('.edit-book-form');
+const closeEditBookForm = document.querySelector('.close-edit-book-form');
+
 const title = document.querySelector('#book-title');
 const author = document.querySelector('#book-author');
-const pages = document.querySelector('#book-pages');
+const rating = document.querySelector('#book-rating');
 const read = document.querySelector('#book-read');
+const image = document.querySelector('#book-image');
+
+const editTitle = document.querySelector('#book-title-edit');
+const editAuthor = document.querySelector('#book-author-edit');
+const editRating = document.querySelector('#book-rating-edit');
+const editRead = document.querySelector('#book-read-edit');
+const editImage = document.querySelector('#book-image-edit');
+
+const myLibrary = [];
 
 let displayMode = 'grid';
 
+// Event listeners
 addBookButton.addEventListener('click', () => {
     addBookModal.showModal();
+})
+
+closeEditBookForm.addEventListener('click', () => {
+    closeEditModal();
 })
 
 closeBookForm.addEventListener('click', () => {
@@ -31,36 +50,45 @@ addBookForm.addEventListener('submit', (e) => {
     addBook();
 }, true)
 
-const myLibrary = [];
+editBookForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    editBook();
+}, true)
 
-function Book(title, author, pages) {
+// Object
+
+function Book(title, author, read = false, rating = 0, image = '') {
     this.id = this.id = crypto.randomUUID();;
     this.title = title;
     this.author = author;
-    this.pages = Number(pages);
-    this.read = false;  
+    this.rating = rating;
+    this.read = read;
+    this.image = image;
 }
 
 Book.prototype.isRead = function () {
-    return (this.read) ? 'Has been read' : 'Not read yet';
+    return (this.read) ? `<i data-id="${this.id}" class="toggle-read fa-solid fa-check fa-xl"></i>` : `<i data-id="${this.id}" class="toggle-read fa-solid fa-xmark fa-xl"></i>`;
 }
 
 Book.prototype.toggleRead = function () {
-    if (this.read) {
-        this.read = false;
-    } else if (!this.read) {
-        this.read = true;
-    }
+    this.read = !this.read;
     refreshBookList();
 }
 
-function addBookToLibrary(title, author, pages) {
-    const book = new Book(title, author, pages);
-    myLibrary.push(book);
+Book.prototype.getRating = function () {
+    let stars = "";
+    for (let i = 0; i < 5; i++) {
+        if (i < this.rating) {
+            stars += `<i class="fa-solid fa-star orange-star"></i>`;
+        } else {
+            stars += `<i class="fa-solid fa-star"></i>`;
+        }
+    }
+    return stars;
 }
 
 function displayAllBooks() {
-    if (displayMode === 'table'){
+    if (displayMode === 'table') {
         const table = document.createElement('table');
         table.classList.add('table');
         const content = `
@@ -68,8 +96,9 @@ function displayAllBooks() {
                 <tr>
                     <th scope="col">Title</th>
                     <th scope="col">Author</th>
-                    <th scope="col">Pages</th>
+                    <th scope="col">Rating</th>
                     <th scope="col">Read?</th>
+                    <th scope="col">&nbsp;</th>
                     <th scope="col">&nbsp;</th>
                     <th scope="col">&nbsp;</th>
                 </tr>
@@ -87,6 +116,12 @@ function displayAllBooks() {
     for (let i = 0; i < deleteBookButtons.length; i++) {
         deleteBookButtons[i].addEventListener('click', (e) => {
             deleteBook(e.target.dataset.id);
+        })
+    }
+
+    for (let i = 0; i < editBookButtons.length; i++) {
+        editBookButtons[i].addEventListener('click', (e) => {
+            showEditBookModal(e.target.dataset.id);
         })
     }
 
@@ -113,19 +148,25 @@ function gridLayout(book) {
     bookList.classList.add('book-list-grid');
     bookList.classList.remove('book-list-table');
     const bookCard = document.createElement('article');
+    bookCard.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url("${book.image}")`;
     bookCard.classList.add('book-card');
     bookCard.dataset.id = book.id;
     const content = `
-                <header>
-                    <h2 class="book-title">${book.title}</h2>
-                    <h3 class="book-author">${book.author}</h3>
+                <header class="article-header">
+                    <div class="article-header-item">
+                        <h2 class="book-title">${book.title}</h2>
+                        <h3 class="book-author">${book.author}</h3>
+                    </div>
+                    <div class"article-header-item">
+                        ${book.isRead()}
+                    </div>
                 </header>
-                <ul class="book-content">
-                    <li>${book.pages} pages</li>
-                    <li>${book.isRead()}</li>
-                </ul>
-                <button type="button" class="delete-book" data-id="${book.id}">Delete</button>
-                <button type="button" class="toggle-read" data-id="${book.id}">Toggle read</button>
+                <div class="book-content">
+                    ${book.getRating()}
+                </div>
+                <button type="button" class="delete-book" data-id="${book.id}"></button>
+                <!--<button type="button" class="toggle-read" data-id="${book.id}">Toggle read</button>-->
+                <button type="button" class="edit-book" data-id="${book.id}"></button>
     `;
     bookCard.innerHTML = content;
     bookList.appendChild(bookCard);
@@ -139,10 +180,10 @@ function tableLayout(book) {
     const content = `
         <th class="row-header"scope="row">${book.title}</th>
         <td>${book.author}</td>
-        <td>${book.pages}</td>
-        <td>${book.read}</td>
-        <td><button type="button" class="delete-book" data-id="${book.id}">Delete</button></td>
-        <td><button type="button" class="toggle-read" data-id="${book.id}">Toggle read</button></<td>
+        <td>${book.getRating()}</td>
+        <td>${book.isRead()}</td>
+        <td><button type="button" class="delete-book" data-id="${book.id}"></button></td>
+        <td><button type="button" class="edit-book" data-id="${book.id}"></button></td>
     `;
     tableRow.innerHTML = content;
     table.appendChild(tableRow);
@@ -156,21 +197,6 @@ function displayBook(book) {
     }
 }
 
-function closeModal() {
-    title.value = '';
-    author.value = '';
-    pages.value = '';
-    read.checked = false;
-    addBookModal.close();
-}
-
-function addBook(e) {
-    const newBook = new Book(title.value, author.value, pages.value, read.checked);
-    myLibrary.push(newBook);
-    closeModal();
-    refreshBookList();
-}
-
 function refreshBookList() {
     while (bookList.firstChild) {
         bookList.removeChild(bookList.lastChild);
@@ -178,8 +204,67 @@ function refreshBookList() {
     displayAllBooks()
 }
 
+// Edit books
+function showEditBookModal(book) {
+    editBookModal.showModal();
+    const find = myLibrary.find(b => b.id == book);
+    const form = editBookModal.querySelector('.edit-book-form');
+    form.dataset.id = find.id;
+    if (find) {
+        editTitle.value = find.title;
+        editAuthor.value = find.author;
+        editRating.value = find.rating;
+        editRead.checked = find.read;
+        editImage.value = find.image;
+    }
+}
+
+function editBook(e) {
+    const form = editBookModal.querySelector('.edit-book-form');
+    const book = myLibrary.find(b => b.id == form.dataset.id);
+    if (book) {
+        book.title = editTitle.value;
+        book.author = editAuthor.value;
+        book.rating = editRating.value;
+        book.read = editRead.checked;
+        book.image = editImage.value;
+    }
+    closeEditModal();
+    refreshBookList();
+}
+
+function closeEditModal() {
+    editTitle.value = '';
+    editAuthor.value = '';
+    editRating.value = '';
+    editRead.checked = false;
+    editImage.value = '';
+    editBookModal.close();
+}
+
+// Add books
+function closeModal() {
+    title.value = '';
+    author.value = '';
+    rating.value = '';
+    read.checked = false;
+    image.value = '';
+    addBookModal.close();
+}
+
+function addBook(e) {
+    const newBook = new Book(title.value, author.value, read.checked, rating.value);
+    myLibrary.push(newBook);
+    closeModal();
+    refreshBookList();
+}
+
+function addBookToLibrary(title, author, read, rating, image) {
+    const book = new Book(title, author, read, rating, image);
+    myLibrary.push(book);
+}
+
 function deleteBook(book) {
-    // this isn't working
     const index = myLibrary.findIndex(b => b.id == book);
     if (index >= 0) {
         myLibrary.splice(index, 1);
@@ -187,22 +272,22 @@ function deleteBook(book) {
     refreshBookList();
 }
 
-addBookToLibrary('Wasp Factory', 'Iain M Banks', 435);
-addBookToLibrary('Dune', 'Frank Herbert', 765);
-addBookToLibrary('The Magus', 'John Fowles', 378);
-addBookToLibrary('Prophet Song', 'Rachel Morris', 378);
-addBookToLibrary('Homo Deus', 'Rachel Morris', 768);
+addBookToLibrary('Wasp Factory', 'Iain M Banks', true, 4, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1434940562i/567678.jpg');
+addBookToLibrary('Dune', 'Frank Herbert', true, 3, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1555447414i/44767458.jpg');
+addBookToLibrary('The Magus', 'John Fowles', false, 0, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1441323311i/16286.jpg');
+addBookToLibrary('Prophet Song', 'Rachel Morris', false, 2, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1689541792i/158875813.jpg');
+addBookToLibrary('Homo Deus', 'Rachel Morris');
 
 displayAllBooks();
 
 // Display total number of books, and total read
 // Change delete icon to bin
-// Button to change display to table instead of grid
+// DONE Button to change display to table instead of grid
 // Add favourite icon
 // Ability to sort books
 // Add read icon to top right, if clicked changes status
-// Add edit button
+// DONE Add edit button
 // Add image URL
 // Add local storage
-// Add date added to object
-// Add rating
+// DONE Add rating
+// Add numbers to table view

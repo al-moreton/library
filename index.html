@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library</title>
+    <script src="https://kit.fontawesome.com/caa061f740.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -16,8 +17,12 @@
             </h1>
         </div>
         <div class="book-buttons">
-            <button class="header-buttons add-book-button">Add book</button>
-            <button class="header-buttons change-layout">Change layout</button>
+            <button class="header-buttons add-book-button">
+                <i class="fa-solid fa-plus fa-xl" style="color: #4b8674;"></i>
+            </button>
+            <button class="header-buttons change-layout">
+                <i class="fa-solid fa-table fa-xl" style="color: #4b8674;"></i>
+            </button>
         </div>
     </header>
     <main>
@@ -33,14 +38,41 @@
                 <label for="book-author">Author</label>
                 <input type="text" name="book-author" id="book-author" />
                 <br />
-                <label for="book-pages">Number of pages</label>
-                <input type="number" name="book-pages" id="book-pages" min="0" />
+                <label for="book-rating">Rating</label>
+                <input type="number" name="book-rating" id="book-rating" min="0" />
                 <br />
                 <label for="book-read">Read?</label>
                 <input type="checkbox" name="book-read" id="book-read" />
                 <br />
+                <label for="book-image">Image URL</label>
+                <input type="value" name="book-image" id="book-image" />
+                <br />
                 <button type="submit" class="book-form-buttons submit-book-form">Add book</button>
                 <button type="button" class="book-form-buttons close-book-form">Cancel</button>
+            </form>
+        </dialog>
+        <dialog class="edit-book-modal">
+            <h2 class="add-book-modal-title">
+                Edit a book
+            </h2>
+            <form class="edit-book-form">
+                <label for="book-title-edit">Title</label>
+                <input type="text" name="book-title-edit" id="book-title-edit" />
+                <br />
+                <label for="book-author-edit">Author</label>
+                <input type="text" name="book-author-edit" id="book-author-edit" />
+                <br />
+                <label for="book-rating-edit">Rating</label>
+                <input type="number" name="book-rating-edit" id="book-rating-edit" min="0" />
+                <br />
+                <label for="book-read-edit">Read?</label>
+                <input type="checkbox" name="book-read-edit" id="book-read-edit" />
+                <br />
+                <label for="book-image-edit">Image URL</label>
+                <input type="value" name="book-image-edit" id="book-image-edit" />
+                <br />
+                <button type="submit" class="book-form-buttons submit-book-form-edit">Save</button>
+                <button type="button" class="book-form-buttons close-edit-book-form">Cancel</button>
             </form>
         </dialog>
     </main>

@@ -12,6 +12,22 @@ body {
     margin-bottom: 10px;
 }
 
+.book-content {
+    margin-bottom: 10px;
+}
+
+.orange-star {
+    color: #ffbb5c;
+}
+
+.header-buttons {
+    border: none;
+}
+
+.header-button:hover {
+    filter: saturate(0.5);
+}
+
 .book-buttons {
     text-align: right;
 }
@@ -65,10 +81,32 @@ th, td {
 
 .book-card {
     /* border: 1px solid black; */
-    /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border-radius: 2px;
     padding: 15px;
     background-color: white;
+    background-size: cover;
+}
+
+.article-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.book-card button, .table-body tr td button {
+    border: none;
+    background: none;
+}
+
+.delete-book::after {
+    font-family: 'FontAwesome';
+    content: '\f1f8';
+}
+
+.edit-book::after {
+    font-family: 'FontAwesome';
+    content: '\f044';
 }
 
 .book-title {
@@ -82,7 +120,7 @@ th, td {
     font-style: italic;
 }
 
-.add-book-modal {
+.add-book-modal, .edit-book-modal {
     border: none;
     width: 300px;
 }
