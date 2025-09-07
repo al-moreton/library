@@ -24,6 +24,8 @@ const editRating = document.querySelector('#book-rating-edit');
 const editRead = document.querySelector('#book-read-edit');
 const editImage = document.querySelector('#book-image-edit');
 
+const notifBanner = document.getElementById('notification-banner');
+
 const myLibrary = [];
 
 let displayMode = 'grid';
@@ -233,6 +235,7 @@ function editBook(e) {
         book.image = editImage.value;
     }
     closeEditModal();
+    notification('edit')
     saveLibrary();
     refreshBookList();
 }
@@ -258,10 +261,16 @@ function closeModal() {
 
 function addBook(e) {
     const newBook = new Book(title.value, author.value, read.checked, rating.value, image.value);
-    myLibrary.push(newBook);
-    closeModal();
-    saveLibrary();
-    refreshBookList();
+    const index = myLibrary.findIndex(b => b.title.toLowerCase() == title.value.toLowerCase());
+    if (index < 0) {
+        myLibrary.push(newBook);
+        notification('add');
+        closeModal();
+        saveLibrary();
+        refreshBookList();
+    } else {
+        notification('duplicate');
+    }
 }
 
 function addBookToLibrary(title, author, read, rating, image) {
@@ -274,8 +283,47 @@ function deleteBook(book) {
     if (index >= 0) {
         myLibrary.splice(index, 1);
     }
+    notification('delete');
     saveLibrary();
     refreshBookList();
+}
+
+// Notifications
+function notification(activity) {
+    notifBanner.style.display = 'none';
+    notifBanner.textContent = '';
+    let message = '';
+    let color = '';
+    switch (activity) {
+        case 'add':
+            message = 'Succesfully added';
+            color = 'green';
+            break;
+        case 'duplicate':
+            message = 'Duplicate book added';
+            color = 'red';
+            break;
+        case 'delete':
+            message = 'Book removed!';
+            color = 'green';
+            break;
+        case 'edit':
+            message = 'Book updated!';
+            color = 'green';
+            break;
+        default:
+            return;
+    }
+
+    void notifBanner.offsetWidth;
+
+    notifBanner.textContent = message;
+    notifBanner.style.backgroundColor = color;
+    notifBanner.style.display = 'block';
+
+    setTimeout(() => {
+        notifBanner.style.display = 'none';
+    }, 3000);
 }
 
 // local storage
@@ -302,3 +350,5 @@ displayAllBooks();
 // Add favourite icon
 // Ability to sort books
 // Hook up to API to download images and other metadata
+// DONE prevent duplicate books being added
+// Add alert banner for successfully added, duplicated prevented, etc
