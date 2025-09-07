@@ -166,6 +166,7 @@ td {
     padding: 15px;
     background-color: white;
     background-size: cover;
+    max-width: 300px;
 }
 
 .article-header {

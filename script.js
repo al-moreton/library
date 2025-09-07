@@ -7,6 +7,7 @@ const changeLayoutButton = document.querySelector('.change-layout');
 const deleteBookButtons = document.getElementsByClassName('delete-book');
 const toggleReadButons = document.getElementsByClassName('toggle-read');
 const sortSelect = document.getElementById('book-sort');
+const searchFilter = document.getElementById('book-filter');
 
 const editBookButtons = document.getElementsByClassName('edit-book');
 const editBookModal = document.querySelector('.edit-book-modal');
@@ -53,6 +54,10 @@ addBookForm.addEventListener('submit', (e) => {
     addBook();
 }, true)
 
+searchFilter.addEventListener('input', (e) => {
+    filterBooks(e.target.value);
+}, true)
+
 editBookForm.addEventListener('submit', (e) => {
     e.preventDefault();
     editBook();
@@ -76,7 +81,6 @@ bookList.addEventListener('click', (e) => {
 });
 
 // Object
-
 function Book(title, author, read = false, rating = 0, image = '') {
     this.id = crypto.randomUUID();;
     this.title = title;
@@ -106,6 +110,31 @@ Book.prototype.getRating = function () {
         }
     }
     return stars;
+}
+
+function filterBooks(str) {
+    const filteredLibrary = myLibrary.filter((b) => {
+        return (
+            b.title.toLowerCase().includes(str.toLowerCase()) ||
+            b.author.toLowerCase().includes(str.toLowerCase())
+        );
+    })
+    displayFilteredBooks(filteredLibrary);
+}
+
+// This is repeating what displayAllBooks is doing, could probably combine
+function displayFilteredBooks(filteredList) {
+    while (bookList.firstChild) {
+        bookList.removeChild(bookList.lastChild);
+    }
+    if (filteredList.length === 0) {
+        bookList.innerHTML = "<p>No books found!</p>";
+        return;
+    }
+    filteredList.forEach((book) => {
+        displayBook(book);
+    });
+    if (displayMode === 'table') getTableRows();
 }
 
 function sortBooks(method) {
@@ -183,7 +212,7 @@ function displayAllBooks() {
         displayBook(book);
     })
 
-    getTableRows();
+    if (displayMode === 'table') getTableRows();
 }
 
 function toggleLayout() {
@@ -382,16 +411,28 @@ function saveLibrary() {
 
 function loadLibrary() {
     const data = JSON.parse(localStorage.getItem('myLibrary')) || [];
-    myLibrary.length = 0; // clear current
-    data.forEach(b => myLibrary.push(new Book(b.title, b.author, b.read, b.rating, b.image)));
+    myLibrary.length = 0;
+    if (data.length > 0) {
+        data.forEach(b => myLibrary.push(
+            new Book(b.title, b.author, b.read, b.rating, b.image)
+        ));
+    } else {
+        myLibrary.push(
+            new Book(
+                'Example book',
+                'Jane Doe',
+                false,
+                4,
+                'https://via.placeholder.com/150'
+            )
+        );
+        saveLibrary();
+    }
 }
 
 loadLibrary();
 displayAllBooks();
 
 // Display total number of books, and total read
-// DONE Add favourite icon
-// DONE Ability to sort books
 // Hook up to API to download images and other metadata
-// DONE prevent duplicate books being added
-// DONE Add alert banner for successfully added, duplicated prevented, etc
+// add favourite?
