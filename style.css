@@ -42,6 +42,12 @@ button i:hover {
     color: #4b8674;
 }
 
+#book-sort {
+    border: none;
+    background: none;
+    width: 100px;
+}
+
 .change-layout {
     color: #4b8674;
 }
@@ -101,22 +107,27 @@ button i:hover {
 }
 
 .title-col {
+    width: 250px;
     max-width: 250px;
 }
 
 .author-col {
+    width: 150px;
     max-width: 150px;
 }
 
 .rating-col {
+    width: 150px;
     max-width: 150px;
 }
 
 .read-col {
+    width: 70px;
     max-width: 70px;
 }
 
 .delete-col, .edit-col {
+    width: 50px;
     max-width: 50px;
 }
 
@@ -180,6 +191,7 @@ td {
 .table-body tr td button {
     border: none;
     background: none;
+    padding: 4px;
 }
 
 .delete-book::after {

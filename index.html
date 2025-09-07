@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library</title>
-    <link rel="icon" type="image/png" href="src/favicon.png"/>
+    <link rel="icon" type="image/png" href="src/favicon.png" />
     <script src="https://kit.fontawesome.com/caa061f740.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css" />
 </head>
@@ -18,6 +18,13 @@
             </h1>
         </div>
         <div class="book-buttons">
+            <select name="book-sort" id="book-sort" class="book-sort">
+                <option value="">Sort by...</option>
+                <option value="title-asc">Title asc.</option>
+                <option value="title-desc">Title desc.</option>
+                <option value="rating">Rating</option>
+                <option value="read">Read status</option>
+            </select>
             <button type="button" class="header-buttons add-book-button">
                 <i class="fa-solid fa-plus fa-xl"></i>
             </button>

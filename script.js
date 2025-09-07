@@ -6,6 +6,7 @@ const addBookForm = document.querySelector('.add-book-form');
 const changeLayoutButton = document.querySelector('.change-layout');
 const deleteBookButtons = document.getElementsByClassName('delete-book');
 const toggleReadButons = document.getElementsByClassName('toggle-read');
+const sortSelect = document.getElementById('book-sort');
 
 const editBookButtons = document.getElementsByClassName('edit-book');
 const editBookModal = document.querySelector('.edit-book-modal');
@@ -57,6 +58,10 @@ editBookForm.addEventListener('submit', (e) => {
     editBook();
 }, true)
 
+sortSelect.addEventListener('change', (e) => {
+    sortBooks(e.target.value);
+}, true)
+
 bookList.addEventListener('click', (e) => {
     if (e.target.classList.contains('delete-book')) {
         deleteBook(e.target.dataset.id);
@@ -101,6 +106,55 @@ Book.prototype.getRating = function () {
         }
     }
     return stars;
+}
+
+function sortBooks(method) {
+    switch (method) {
+        case 'title-asc':
+            myLibrary.sort((a, b) => {
+                const bookA = a.title.toUpperCase(); // ignore upper and lowercase
+                const bookB = b.title.toUpperCase(); // ignore upper and lowercase
+                if (bookA < bookB) {
+                    return -1;
+                }
+                if (bookA > bookB) {
+                    return 1;
+                }
+                return 0;
+            })
+            break;
+        case 'title-desc':
+            myLibrary.sort((a, b) => {
+                const bookA = a.title.toUpperCase(); // ignore upper and lowercase
+                const bookB = b.title.toUpperCase(); // ignore upper and lowercase
+                if (bookA < bookB) {
+                    return 1;
+                }
+                if (bookA > bookB) {
+                    return -1;
+                }
+                return 0;
+            })
+            break;
+        case 'rating':
+            myLibrary.sort((a, b) => {
+                const bookA = a.rating;
+                const bookB = b.rating;
+                return bookB - bookA;
+            })
+            break;
+        case 'read':
+            myLibrary.sort((a, b) => {
+                const bookA = a.read;
+                const bookB = b.read;
+                return bookA - bookB;
+            })
+            break;
+        default:
+            return;
+    }
+
+    refreshBookList();
 }
 
 function displayAllBooks() {
@@ -273,11 +327,6 @@ function addBook(e) {
     }
 }
 
-function addBookToLibrary(title, author, read, rating, image) {
-    const book = new Book(title, author, read, rating, image);
-    myLibrary.push(book);
-}
-
 function deleteBook(book) {
     const index = myLibrary.findIndex(b => b.id == book);
     if (index >= 0) {
@@ -337,18 +386,12 @@ function loadLibrary() {
     data.forEach(b => myLibrary.push(new Book(b.title, b.author, b.read, b.rating, b.image)));
 }
 
-addBookToLibrary('Wasp Factory', 'Iain M Banks', true, 4, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1434940562i/567678.jpg');
-addBookToLibrary('Dune', 'Frank Herbert', true, 3, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1555447414i/44767458.jpg');
-addBookToLibrary('The Magus', 'John Fowles', false, 0, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1441323311i/16286.jpg');
-addBookToLibrary('Prophet Song', 'Rachel Morris', false, 2, 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1689541792i/158875813.jpg');
-addBookToLibrary('Homo Deus', 'Rachel Morris');
-
 loadLibrary();
 displayAllBooks();
 
 // Display total number of books, and total read
-// Add favourite icon
-// Ability to sort books
+// DONE Add favourite icon
+// DONE Ability to sort books
 // Hook up to API to download images and other metadata
 // DONE prevent duplicate books being added
-// Add alert banner for successfully added, duplicated prevented, etc
+// DONE Add alert banner for successfully added, duplicated prevented, etc
