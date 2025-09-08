@@ -1,6 +1,9 @@
 body {
     background-color: #ededed;
     padding: 0 50px 50px 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 #notification-banner {

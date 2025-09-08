@@ -418,3 +418,5 @@ refreshBookList();
 // Display total number of books, and total read
 // Hook up to API to download images and other metadata
 // add favourites?
+// can edit rating with stars
+// add stars to forms
