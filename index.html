@@ -43,8 +43,13 @@
                 <label for="book-author">Author</label>
                 <input type="text" name="book-author" id="book-author" />
                 <br />
+                <input type="hidden" name="book-rating" id="book-rating" min="0" max="5" />
                 <label for="book-rating">Rating</label>
-                <input type="number" name="book-rating" id="book-rating" min="0" max="5" />
+                <i data-rating="1" class="add-star-rating fa-solid fa-star"></i>
+                <i data-rating="2" class="add-star-rating fa-solid fa-star"></i>
+                <i data-rating="3" class="add-star-rating fa-solid fa-star"></i>
+                <i data-rating="4" class="add-star-rating fa-solid fa-star"></i>
+                <i data-rating="5" class="add-star-rating fa-solid fa-star"></i>
                 <br />
                 <label for="book-read">Read?</label>
                 <input type="checkbox" name="book-read" id="book-read" />
@@ -68,7 +73,12 @@
                 <input type="text" name="book-author-edit" id="book-author-edit" />
                 <br />
                 <label for="book-rating-edit">Rating</label>
-                <input type="number" name="book-rating-edit" id="book-rating-edit" min="0" max="5" />
+                <input type="hidden" name="book-rating-edit" id="book-rating-edit" min="0" max="5" />
+                <i data-rating="1" class="edit-star-rating fa-solid fa-star"></i>
+                <i data-rating="2" class="edit-star-rating fa-solid fa-star"></i>
+                <i data-rating="3" class="edit-star-rating fa-solid fa-star"></i>
+                <i data-rating="4" class="edit-star-rating fa-solid fa-star"></i>
+                <i data-rating="5" class="edit-star-rating fa-solid fa-star"></i>
                 <br />
                 <label for="book-read-edit">Read?</label>
                 <input type="checkbox" name="book-read-edit" id="book-read-edit" />

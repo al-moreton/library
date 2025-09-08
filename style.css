@@ -61,7 +61,13 @@ button i:hover {
 }
 
 .book-content {
-    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.book-content div {
+    margin-right: 15px;
 }
 
 .book-buttons {
@@ -73,6 +79,23 @@ button i:hover {
 .orange-star {
     color: #ffbb5c;
 }
+
+.orange-star-hover {
+    color: #ffbb5c;
+    opacity: 0.5;
+}
+
+.add-star-rating {
+    margin-bottom: 10px;
+}
+
+.edit-star-rating {
+    margin-bottom: 10px;
+}
+
+/* .edit-star-rating:hover, .add-star-rating:hover, .star-rating:hover {
+        opacity: 0.4;
+} */
 
 .header-buttons {
     border: none;

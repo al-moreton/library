@@ -4,12 +4,8 @@ const addBookModal = document.querySelector('dialog');
 const closeBookForm = document.querySelector('.close-book-form');
 const addBookForm = document.querySelector('.add-book-form');
 const changeLayoutButton = document.querySelector('.change-layout');
-const deleteBookButtons = document.getElementsByClassName('delete-book');
-const toggleReadButons = document.getElementsByClassName('toggle-read');
 const sortSelect = document.getElementById('book-sort');
 const searchFilter = document.getElementById('book-filter');
-
-const editBookButtons = document.getElementsByClassName('edit-book');
 const editBookModal = document.querySelector('.edit-book-modal');
 const editBookForm = document.querySelector('.edit-book-form');
 const closeEditBookForm = document.querySelector('.close-edit-book-form');
@@ -36,6 +32,21 @@ let displayMode = 'grid';
 // Event listeners
 addBookButton.addEventListener('click', () => {
     addBookModal.showModal();
+
+    highlightStars('add-star-rating');
+
+    addBookModal.addEventListener('click', (e) => {
+        if (e.target.classList.contains('add-star-rating')) {
+            const stars = document.getElementsByClassName('add-star-rating');
+            for (let i = 0; i < stars.length; i++) {
+                stars[i].classList.remove('orange-star');
+            }
+            for (let i = 0; i < e.target.dataset.rating; i++) {
+                stars[i].classList.add('orange-star');
+            }
+            rating.value = e.target.dataset.rating;
+        }
+    })
 })
 
 closeEditBookForm.addEventListener('click', () => {
@@ -80,6 +91,9 @@ bookList.addEventListener('click', (e) => {
         const book = myLibrary.find(b => b.id == e.target.dataset.id);
         if (book) book.toggleRead();
     }
+    if (e.target.classList.contains('star-rating')) {
+        updateRating(e.target.dataset.id, e.target.dataset.rating);
+    }
 });
 
 // Object
@@ -91,6 +105,7 @@ function Book(title, author, read = false, rating = 0, image = '') {
     this.read = read;
     this.image = image;
 }
+
 
 Book.prototype.isRead = function () {
     return (this.read) ? `<i data-id="${this.id}" class="toggle-read fa-solid fa-check fa-xl" style="color: green;"></i>` : `<i data-id="${this.id}" class="toggle-read fa-solid fa-xmark fa-xl" style="color: red;"></i>`;
@@ -106,9 +121,9 @@ Book.prototype.getRating = function () {
     let stars = "";
     for (let i = 0; i < 5; i++) {
         if (i < this.rating) {
-            stars += `<i class="fa-solid fa-star orange-star"></i>`;
+            stars += `<i data-id="${this.id}" data-rating="${i + 1}" class="star-rating fa-solid fa-star orange-star"></i>`;
         } else {
-            stars += `<i class="fa-solid fa-star"></i>`;
+            stars += `<i data-id="${this.id}" data-rating="${i + 1}" class="star-rating fa-solid fa-star"></i>`;
         }
     }
     return stars;
@@ -171,6 +186,23 @@ function sortBooks(method) {
     refreshBookList();
 }
 
+function highlightStars(css) {
+    const stars = document.getElementsByClassName(css);
+    for (let i = 0; i < stars.length; i++) {
+        stars[i].addEventListener('mouseover', () => {
+            for (x = 0; x < stars[i].dataset.rating; x++) {
+                stars[x].classList.add('orange-star-hover');
+            }
+        })
+
+        stars[i].addEventListener('mouseout', () => {
+            for (x = 0; x < stars[i].dataset.rating; x++) {
+                stars[x].classList.remove('orange-star-hover');
+            }
+        })
+    }
+}
+
 function toggleLayout() {
     if (displayMode === 'grid') {
         displayMode = 'table';
@@ -184,7 +216,7 @@ function gridLayout(book) {
     bookList.classList.add('book-list-grid');
     bookList.classList.remove('book-list-table');
     const bookCard = document.createElement('article');
-    bookCard.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url("${book.image}")`;
+    bookCard.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.5)), url("${book.image}")`;
     bookCard.classList.add('book-card');
     bookCard.dataset.id = book.id;
     const content = `
@@ -198,11 +230,12 @@ function gridLayout(book) {
                     </div>
                 </header>
                 <div class="book-content">
-                    ${book.getRating()}
+                    <div>
+                        ${book.getRating()}
+                    </div>
+                    <button type="button" class="delete-book" data-id="${book.id}"></button>
+                    <button type="button" class="edit-book" data-id="${book.id}"></button>
                 </div>
-                <button type="button" class="delete-book" data-id="${book.id}"></button>
-                <!--<button type="button" class="toggle-read" data-id="${book.id}">Toggle read</button>-->
-                <button type="button" class="edit-book" data-id="${book.id}"></button>
     `;
     bookCard.innerHTML = content;
     bookList.appendChild(bookCard);
@@ -279,9 +312,28 @@ function refreshBookList(list = currentLayout) {
 // Edit books
 function showEditBookModal(book) {
     editBookModal.showModal();
+    highlightStars('edit-star-rating');
+    const stars = document.getElementsByClassName('edit-star-rating');
     const find = myLibrary.find(b => b.id == book);
     const form = editBookModal.querySelector('.edit-book-form');
     form.dataset.id = find.id;
+    for (let i = 0; i < stars.length; i++) {
+        stars[i].classList.remove('orange-star');
+    }
+    for (let i = 0; i < find.rating; i++) {
+        stars[i].classList.add('orange-star');
+    }
+    editBookModal.addEventListener('click', (e) => {
+        if (e.target.classList.contains('edit-star-rating')) {
+            for (let i = 0; i < stars.length; i++) {
+                stars[i].classList.remove('orange-star');
+            }
+            for (let i = 0; i < e.target.dataset.rating; i++) {
+                stars[i].classList.add('orange-star');
+            }
+            editRating.value = e.target.dataset.rating;
+        }
+    })
     if (find) {
         editTitle.value = find.title;
         editAuthor.value = find.author;
@@ -289,6 +341,13 @@ function showEditBookModal(book) {
         editRead.checked = find.read;
         editImage.value = find.image;
     }
+}
+
+function updateRating(dataid, newRating) {
+    const book = myLibrary.find(b => b.id == dataid);
+    book.rating = Number(newRating);
+    saveLibrary();
+    refreshBookList();
 }
 
 function editBook(e) {
@@ -313,6 +372,10 @@ function closeEditModal() {
     editRating.value = '';
     editRead.checked = false;
     editImage.value = '';
+    const stars = document.getElementsByClassName('edit-star-rating');
+    for (let i = 0; i < stars.length; i++) {
+        stars[i].classList.remove('orange-star');
+    }
     editBookModal.close();
 }
 
@@ -323,6 +386,10 @@ function closeModal() {
     rating.value = '';
     read.checked = false;
     image.value = '';
+    const stars = document.getElementsByClassName('add-star-rating');
+    for (let i = 0; i < stars.length; i++) {
+        stars[i].classList.remove('orange-star');
+    }
     addBookModal.close();
 }
 
@@ -414,9 +481,3 @@ function loadLibrary() {
 
 loadLibrary();
 refreshBookList();
-
-// Display total number of books, and total read
-// Hook up to API to download images and other metadata
-// add favourites?
-// can edit rating with stars
-// add stars to forms
