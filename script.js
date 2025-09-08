@@ -465,11 +465,25 @@ function loadLibrary() {
     myLibrary.length = 0;
     if (data.length === 0) {
         myLibrary.push(new Book(
-            'Example book',
-            'Jane Doe',
+            'Wasp Factory',
+            'Iain Banks',
             false,
             4,
-            'https://via.placeholder.com/150'
+            'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1434940562i/567678.jpg'
+        ));
+        myLibrary.push(new Book(
+            'Dune',
+            'Frank Herbert',
+            true,
+            5,
+            'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1555447414i/44767458.jpg'
+        ));
+        myLibrary.push(new Book(
+            'The Magus',
+            'John Fowles',
+            true,
+            3,
+            'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1441323311i/16286.jpg'
         ));
         saveLibrary();
     } else {
