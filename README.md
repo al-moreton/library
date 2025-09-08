@@ -11,7 +11,7 @@ First time building a project with Objects. I've also added functions to the obj
 ## Optimisation and improvements
 Gone a bit over the top with additions and improvements:
 - Filter and sort functionality using array methods
-- Ability to change layout to a table layout
+- Ability to change layout to a table layout (i've built the layouts using `innerHTML`, and I know this isn't the best way to do it)
 - Added image shows in background of grid layout
 - Added a star rating system (with animation on mouseover)
 - Notifications confirming actions when adding, deleting, editing, etc
