@@ -12,27 +12,23 @@
 
 <body>
     <header class="book-header">
-        <div>
-            <h1 class="title">
-                Library
-            </h1>
-        </div>
-        <div class="book-buttons">
-            <input type="text" id="book-filter" placeholder="Search..." />
-            <select name="book-sort" id="book-sort" class="book-sort">
-                <option value="">Sort by...</option>
-                <option value="title-asc">Title asc.</option>
-                <option value="title-desc">Title desc.</option>
-                <option value="rating">Rating</option>
-                <option value="read">Read status</option>
-            </select>
-            <button type="button" class="header-buttons add-book-button">
-                <i class="fa-solid fa-plus fa-xl"></i>
-            </button>
-            <button type="button" class="header-buttons change-layout">
-                <i class="fa-solid fa-table fa-xl"></i>
-            </button>
-        </div>
+        <h1 class="title">
+            Library
+        </h1>
+        <input type="text" class="book-buttons" id="book-filter" placeholder="Search..." />
+        <select name="book-sort" id="book-sort" class="book-buttons book-sort">
+            <option value="">Sort by...</option>
+            <option value="title-asc">Title asc.</option>
+            <option value="title-desc">Title desc.</option>
+            <option value="rating">Rating</option>
+            <option value="read">Read status</option>
+        </select>
+        <button type="button" class="book-buttons header-buttons add-book-button">
+            <i class="fa-solid fa-plus fa-xl"></i>
+        </button>
+        <button type="button" class="book-buttons header-buttons change-layout">
+            <i class="fa-solid fa-table fa-xl"></i>
+        </button>
     </header>
     <main>
         <div class="book-list book-list-grid"></div>

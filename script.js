@@ -29,6 +29,7 @@ const editImage = document.querySelector('#book-image-edit');
 const notifBanner = document.getElementById('notification-banner');
 
 const myLibrary = [];
+let currentLayout = myLibrary;
 
 let displayMode = 'grid';
 
@@ -45,6 +46,7 @@ closeBookForm.addEventListener('click', () => {
     closeModal();
 })
 
+//move toggle layout into refreshlist
 changeLayoutButton.addEventListener('click', () => {
     toggleLayout();
 })
@@ -113,19 +115,19 @@ Book.prototype.getRating = function () {
 }
 
 function filterBooks(str) {
-    const filtered = myLibrary.filter(b =>
+    currentLayout = myLibrary.filter(b =>
         b.title.toLowerCase().includes(str.toLowerCase()) ||
         b.author.toLowerCase().includes(str.toLowerCase())
     );
-    refreshBookList(filtered);
+    refreshBookList(currentLayout);
 }
 
 function sortBooks(method) {
     switch (method) {
         case 'title-asc':
-            myLibrary.sort((a, b) => {
-                const bookA = a.title.toUpperCase(); // ignore upper and lowercase
-                const bookB = b.title.toUpperCase(); // ignore upper and lowercase
+            currentLayout.sort((a, b) => {
+                const bookA = a.title.toUpperCase();
+                const bookB = b.title.toUpperCase();
                 if (bookA < bookB) {
                     return -1;
                 }
@@ -136,9 +138,9 @@ function sortBooks(method) {
             })
             break;
         case 'title-desc':
-            myLibrary.sort((a, b) => {
-                const bookA = a.title.toUpperCase(); // ignore upper and lowercase
-                const bookB = b.title.toUpperCase(); // ignore upper and lowercase
+            currentLayout.sort((a, b) => {
+                const bookA = a.title.toUpperCase();
+                const bookB = b.title.toUpperCase();
                 if (bookA < bookB) {
                     return 1;
                 }
@@ -149,14 +151,14 @@ function sortBooks(method) {
             })
             break;
         case 'rating':
-            myLibrary.sort((a, b) => {
+            currentLayout.sort((a, b) => {
                 const bookA = a.rating;
                 const bookB = b.rating;
                 return bookB - bookA;
             })
             break;
         case 'read':
-            myLibrary.sort((a, b) => {
+            currentLayout.sort((a, b) => {
                 const bookA = a.read;
                 const bookB = b.read;
                 return bookA - bookB;
@@ -175,7 +177,6 @@ function toggleLayout() {
     } else if (displayMode == 'table') {
         displayMode = 'grid';
     }
-    // pass over filtered list here to keep filter when changing layout
     refreshBookList();
 }
 
@@ -240,7 +241,7 @@ function displayBook(book) {
     }
 }
 
-function refreshBookList(list = myLibrary) {
+function refreshBookList(list = currentLayout) {
     while (bookList.firstChild) {
         bookList.removeChild(bookList.lastChild);
     }
@@ -395,21 +396,19 @@ function saveLibrary() {
 function loadLibrary() {
     const data = JSON.parse(localStorage.getItem('myLibrary')) || [];
     myLibrary.length = 0;
-    if (data.length > 0) {
+    if (data.length === 0) {
+        myLibrary.push(new Book(
+            'Example book',
+            'Jane Doe',
+            false,
+            4,
+            'https://via.placeholder.com/150'
+        ));
+        saveLibrary();
+    } else {
         data.forEach(b => myLibrary.push(
             new Book(b.title, b.author, b.read, b.rating, b.image)
         ));
-    } else {
-        myLibrary.push(
-            new Book(
-                'Example book',
-                'Jane Doe',
-                false,
-                4,
-                'https://via.placeholder.com/150'
-            )
-        );
-        saveLibrary();
     }
 }
 
@@ -419,4 +418,3 @@ refreshBookList();
 // Display total number of books, and total read
 // Hook up to API to download images and other metadata
 // add favourites?
-// filter to follow through when changing layout
