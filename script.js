@@ -97,36 +97,93 @@ bookList.addEventListener('click', (e) => {
 });
 
 // Object
-function Book(title, author, read = false, rating = 0, image = '') {
-    this.id = crypto.randomUUID();;
-    this.title = title;
-    this.author = author;
-    this.rating = Math.min(5, Math.max(0, Number(rating)));;
-    this.read = read;
-    this.image = image;
-}
+class Book {
 
-
-Book.prototype.isRead = function () {
-    return (this.read) ? `<i data-id="${this.id}" class="toggle-read fa-solid fa-check fa-xl" style="color: green;"></i>` : `<i data-id="${this.id}" class="toggle-read fa-solid fa-xmark fa-xl" style="color: red;"></i>`;
-}
-
-Book.prototype.toggleRead = function () {
-    this.read = !this.read;
-    saveLibrary();
-    refreshBookList();
-}
-
-Book.prototype.getRating = function () {
-    let stars = "";
-    for (let i = 0; i < 5; i++) {
-        if (i < this.rating) {
-            stars += `<i data-id="${this.id}" data-rating="${i + 1}" class="star-rating fa-solid fa-star orange-star"></i>`;
-        } else {
-            stars += `<i data-id="${this.id}" data-rating="${i + 1}" class="star-rating fa-solid fa-star"></i>`;
-        }
+    constructor(title, author, read = false, rating = 0, image = '') {
+        this.id = crypto.randomUUID();
+        this._title = title;
+        this._author = author;
+        this._rating = Math.min(5, Math.max(0, Number(rating)));
+        this._read = read;
+        this._image = image;
     }
-    return stars;
+
+    get title() {
+        return this._title;
+    }
+    set title(newTitle) {
+        this._title = newTitle;
+    }
+
+    get author() {
+        return this._author;
+    }
+    set author(newAuthor) {
+        this._author = newAuthor;
+    }
+
+    get rating() {
+        return this._rating;
+    }
+    set rating(value) {
+        this._rating = Math.min(5, Math.max(0, Number(value)));
+    }
+
+    get read() {
+        return this._read;
+    }
+    set read(value) {
+        this._read = Boolean(value);
+    }
+
+    get image() {
+        return this._image;
+    }
+    set image(url) {
+        this._image = url;
+    }
+
+    isRead() {
+        return (this.read) ? `<i data-id="${this.id}" class="toggle-read fa-solid fa-check fa-xl" style="color: green;"></i>` : `<i data-id="${this.id}" class="toggle-read fa-solid fa-xmark fa-xl" style="color: red;"></i>`;
+    }
+
+    getRating() {
+        let stars = "";
+        for (let i = 0; i < 5; i++) {
+            if (i < this.rating) {
+                stars += `<i data-id="${this.id}" data-rating="${i + 1}" class="star-rating fa-solid fa-star orange-star"></i>`;
+            } else {
+                stars += `<i data-id="${this.id}" data-rating="${i + 1}" class="star-rating fa-solid fa-star"></i>`;
+            }
+        }
+        return stars;
+    }
+
+    toggleRead() {
+        this.read = !this.read;
+        saveLibrary();
+        refreshBookList();
+    }
+
+    // called automatically - reserved method name
+    toJSON() {
+        return {
+            id: this.id,
+            title: this.title,
+            author: this.author,
+            rating: this.rating,
+            read: this.read,
+            image: this.image
+        };
+    }
+
+    // builds each book
+    static fromJSON(obj) {
+        const book = new Book(obj.title, obj.author, obj.read, obj.rating, obj.image);
+        book.id = obj.id;
+        return book;
+    }
+
 }
 
 function filterBooks(str) {
@@ -488,7 +545,7 @@ function loadLibrary() {
         saveLibrary();
     } else {
         data.forEach(b => myLibrary.push(
-            new Book(b.title, b.author, b.read, b.rating, b.image)
+            Book.fromJSON(b)
         ));
     }
 }
